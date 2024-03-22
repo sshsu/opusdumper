@@ -6,19 +6,17 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -v -stdlib=libc++ -framework OpenGL -framework AppKit -framework Security -framework CoreFoundation -framework CoreVideo -framework CoreMedia -framework QuartzCore -framework CoreFoundation -framework VideoDecodeAcceleration -framework Cocoa -framework AudioToolbox -framework VideoToolbox -framework OpenCL ")
 
 
-
+SET(FFMPEG_HEADER_PATH /Users/yishen/git2/ffmpeg-6.1.1/libs/include)
+SET(FFMPEG_LIB_PATH /Users/yishen/git2/ffmpeg-6.1.1/libs/lib)
 
 # 添加头文件搜索路径
 include_directories(
-    /Users/yishen/git2/ffmpeg-6.1.1/libs/include
+    ${FFMPEG_HEADER_PATH}
 )
-
-
-
 
 # 添加库文件搜索路径
 link_directories(
-    /Users/yishen/git2/ffmpeg-6.1.1/libs/lib
+    ${FFMPEG_LIB_PATH}
     /usr/local/lib/
 )
 
