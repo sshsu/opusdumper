@@ -16,18 +16,18 @@ extern "C" {
 
 class OpusDumper{
 public:
-    void init(const char *fileName,
-              const int channelNum,
-              const int sampleRate,
+    void init(const char *file_name,
+              const int channel_num,
+              const int sample_rate,
               const int bitrate,
               const int format,
-              const int frameMs);
+              const int frame_ms);
     void save_opus(const uint8_t* date, const int data_len);
     void write_trailer();
 private:
     AVFormatContext *output_format_context = NULL;
     int pts = 0;
-    int duration = 20;
+    int frame_ms = 20;
 };
 
 

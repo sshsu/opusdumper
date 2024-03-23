@@ -1,28 +1,28 @@
 #include "opus_dumper.h"
 
 
-void OpusDumper::init(const char *fileName,
-                      const int channelNum,
-                      const int sampleRate,
+void OpusDumper::init(const char *file_name,
+                      const int channel_num,
+                      const int sample_rate,
                       const int bitrate,
                       const int format,
-                      const int frameMs){
+                      const int frame_ms){
 
-    avformat_alloc_output_context2(&output_format_context, NULL, NULL, fileName);
+    avformat_alloc_output_context2(&output_format_context, NULL, NULL, file_name);
     avformat_new_stream(output_format_context, NULL);
-
+    this->frame_ms = frame_ms;
     AVStream* output_stream = output_format_context->streams[0];
     output_stream->codecpar->codec_type = AVMEDIA_TYPE_AUDIO;
     output_stream->codecpar->codec_id = AV_CODEC_ID_OPUS;
-    output_stream->codecpar->channels = channelNum;
-    output_stream->codecpar->sample_rate = sampleRate;
+    output_stream->codecpar->channels = channel_num;
+    output_stream->codecpar->sample_rate = sample_rate;
     output_stream->codecpar->bit_rate = bitrate;
     output_stream->codecpar->format = format;
     output_stream->time_base = (AVRational){1, 1000};
     if(!(output_format_context->flags & AVFMT_NOFILE)){
-        int ret = avio_open(&output_format_context->pb, fileName, AVIO_FLAG_WRITE);
+        int ret = avio_open(&output_format_context->pb, file_name, AVIO_FLAG_WRITE);
         if(ret < 0){
-            printf("Could not open output file %s\n", fileName);
+            printf("Could not open output file %s\n", file_name);
             exit(1);
         }
     }
@@ -41,8 +41,8 @@ void OpusDumper::save_opus(const uint8_t* data, const int data_len){
     packet->time_base = (AVRational){1, 1000};
     packet->pts = av_rescale_q(pts, src_rational, packet->time_base);
     packet->dts = av_rescale_q(pts, src_rational, packet->time_base);
-    packet->duration = av_rescale_q(duration, src_rational, packet->time_base);
-    pts += duration;
+    packet->duration = av_rescale_q(frame_ms, src_rational, packet->time_base);
+    pts += frame_ms;
     packet->flags = 0;
 
 printf("save opus frame success, pts %d packet->pts %d duration %d\n", 
